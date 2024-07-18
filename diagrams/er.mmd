@@ -1,0 +1,127 @@
+erDiagram
+    Users {
+        int id PK
+        string name
+        string email
+        string phone
+        boolean email_verified
+        boolean phone_verified
+        date created
+    }
+
+    User_Preferences {
+        int id PK
+        int user_id FK
+        int genre_id FK
+        int location_id FK
+    }
+
+    Movies {
+        int id PK
+        string title
+        string description
+        int genre_id FK
+        int duration_minutes
+        string language
+        date release_date
+        decimal rating
+    }
+
+    Genres {
+        int id PK
+        string name
+    }
+
+    Showtimes {
+        int id PK
+        int movie_id FK
+        int screen_id FK
+        date show_date
+        time show_time
+    }
+
+    Screens {
+        int id PK
+        int theatre_id FK
+        string screen_name
+        int total_seats
+    }
+
+    Seats {
+        int id PK
+        int screen_id FK
+        string seat_number
+        string seat_type
+        string status
+    }
+
+    Theatres {
+        int id PK
+        int partner_id FK
+        string name
+        int location_id FK
+    }
+
+    Theatre_Partners {
+        int id PK
+        string partner_name
+        string contact_name
+        string contact_email
+        string contact_phone
+        date created
+    }
+
+    Bookings {
+        int id PK
+        int user_id FK
+        int showtime_id FK
+        int seat_id FK
+        date booking_date
+        decimal total_amount
+        string status
+    }
+
+    Payments {
+        int id PK
+        int booking_id FK
+        string status
+        decimal amount
+        string payment_method
+        string transaction_id
+        date payment_date
+    }
+
+    Locations {
+        int id PK
+        string city
+        string state
+        string country
+        string zip
+    }
+
+    Notifications {
+        int id PK
+        int user_id FK
+        string message
+        string type
+        string status
+        date notification_date
+    }
+
+    Users ||--o{ User_Preferences: has
+    User_Preferences }o--|| Genres: prefers
+    Movies }o--|| Genres: belongs_to
+    Showtimes }o--|| Movies: shows
+    Showtimes }o--|| Screens: showsON
+    Screens }o--|| Theatres: in
+    Theatres }o--|| Screens: has
+    Screens }o--|| Seats: has
+    Theatres ||--o{ Theatre_Partners: partnered_with
+    Showtimes ||--o{ Bookings: booked_for
+    Users ||--o{ Bookings: makes
+    Bookings ||--o{ Movies: has
+    Bookings ||--o{ Seats: includes
+    Bookings ||--o{ Payments: paid_by
+    Theatres }o--|| Locations: located_at
+    User_Preferences }o--|| Locations: preferred
+    Notifications ||--|| Users: sends_to

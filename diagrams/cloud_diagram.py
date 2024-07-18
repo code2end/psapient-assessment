@@ -1,10 +1,9 @@
 from diagrams import Diagram, Cluster, Edge
 from diagrams.aws.compute import Lambda, EC2
-from diagrams.aws.database import RDS, Dynamodb
+from diagrams.aws.database import RDS
 from diagrams.aws.network import ELB, APIGateway, Route53
 from diagrams.aws.security import IAM
 from diagrams.aws.storage import S3
-from diagrams.aws.management import Cloudwatch
 from diagrams.aws.general import User
 from diagrams.onprem.aggregator import Fluentd
 from diagrams.onprem.queue import Kafka
@@ -32,15 +31,15 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
     with Cluster("VPC"):
 
         # API Gateway
-        api_gateway = APIGateway("API Gateway")
+        api_gateway = APIGateway("API Gateway (Auth, Rate Limiting, Caching, Logging, Tracing, Security, Context)")
         analytics_monitor = Spark("Analytics Processing")
         monitoring = Grafana("Analytics Monitoring")
 
         # Microservices Cluster
         micro_cluster = Cluster("Microservices")
         with micro_cluster:
-            auth_service = EC2("Auth Service")
             user_service = EC2("User Service")
+            search_service = EC2("Search Service")
             partner_service = EC2("Partner Service")
             movie_service = EC2("Movie Service")
             booking_service = EC2("Booking Service")
@@ -52,7 +51,7 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
             # Caching
             cache = ElasticacheForRedis("Redis Cache")
         
-        nosql_db = Mongodb("Mongo")
+        full_text_search = Elasticsearch("Full Text Search")
         # Storage
         storage = S3("S3 Bucket")
         # Kafka
@@ -70,6 +69,7 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
     api_gateway >> movie_service
     api_gateway >> booking_service
     api_gateway >> admin_service
+    api_gateway >> search_service
     
     booking_service >> cache >> relational_db
     booking_service >> kafka
@@ -85,10 +85,8 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
 
     admin_service >> aggregator
     api_gateway >> aggregator >> elastic_search
-    api_gateway >> auth_service
 
     analytics_consumer >> analytics_monitor >> monitoring
     relational_db >> analytics_monitor
     analytics_monitor >> relational_db
-    analytics_monitor >> nosql_db
-    user_service >> Edge(color="black", label="Pre-calculated data") >> nosql_db
+    search_service >> full_text_search

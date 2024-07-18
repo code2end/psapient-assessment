@@ -16,3 +16,11 @@ python3 -m pip install diagrams
 
 - Run the `cloud_diagram.py` to generate diagram image
   `python3 cloud_diagram.py`
+
+### Getting Started with Mermaid [ER Diagram]
+
+- Global instal mermaid. Please check out to docs to setup locally.
+  `npm install -g @mermaid-js/mermaid-cli`
+
+- Source the virtual env and activate it
+  `mmdc -i input.mmd -o output.png`
