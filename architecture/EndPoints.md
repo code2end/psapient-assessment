@@ -43,7 +43,7 @@ GET /genres/{id}
 POST /genres
 PUT /genres/{id}
 DELETE /genres/{id}
-GET /movies/{id}/showtimes?context={location, screen, partner, ratings}
+GET /movies/{id}/showtimes?context={location, screen, partner, ratings, date}
 ```
 
 ### Booking Service
@@ -110,5 +110,5 @@ CRUD USERS, MOVIES, GENRES, THEATRE_PARTNERS
 ### Search Service
 
 ```
-GET /search?context={location, searchInput, genre, partner, ratings}
+GET /search?context={location, searchInput, genre, partner, ratings, date}
 ```

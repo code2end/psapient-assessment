@@ -67,8 +67,17 @@ CREATE TABLE Seats (
     ScreenID INT,
     SeatNumber VARCHAR(10) NOT NULL,
     SeatType ENUM('Regular', 'Premium') NOT NULL,
-    SeatStatus ENUM('Reserved', 'Available', 'Locked', 'Unavailable') NOT NULL,
     FOREIGN KEY (ScreenID) REFERENCES Screens(ScreenID)
+);
+
+CREATE TABLE SeatAvailability (
+    SeatAvailabilityID INT PRIMARY KEY AUTO_INCREMENT,
+    ShowtimeID INT,
+    SeatID INT,
+    SeatStatus ENUM('Booked', 'Available', 'Locked', 'Unavailable') NOT NULL,
+    FOREIGN KEY (ShowtimeID) REFERENCES Showtimes(ShowtimeID),
+    FOREIGN KEY (SeatID) REFERENCES Seats(SeatID),
+    UNIQUE (ShowtimeID, SeatID)
 );
 
 CREATE TABLE Genres (
@@ -103,12 +112,16 @@ CREATE TABLE Bookings (
     UserID INT,
     ShowtimeID INT,
     SeatID INT,
+    ScreenID INT,
+    TheatreID INT,
     BookingDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     TotalAmount DECIMAL(10, 2) NOT NULL,
     BookingStatus ENUM('Pending', 'Completed', 'Failed') NOT NULL,
     FOREIGN KEY (UserID) REFERENCES Users(UserID),
     FOREIGN KEY (ShowtimeID) REFERENCES Showtimes(ShowtimeID)
     FOREIGN KEY (SeatID) REFERENCES Seats(SeatID)
+    FOREIGN KEY (ScreenID) REFERENCES Screens(ScreenID)
+    FOREIGN KEY (TheatreID) REFERENCES Theatres(TheatreID)
 );
 
 CREATE TABLE Payments (
