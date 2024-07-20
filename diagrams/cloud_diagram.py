@@ -5,16 +5,16 @@ from diagrams.aws.network import ELB, APIGateway, Route53
 from diagrams.aws.security import IAM
 from diagrams.aws.storage import S3
 from diagrams.aws.general import User
-from diagrams.onprem.aggregator import Fluentd
+from diagrams.elastic.elasticsearch import Logstash
 from diagrams.onprem.queue import Kafka
 from diagrams.onprem.monitoring import Grafana
 from diagrams.firebase.grow import InAppMessaging
 from diagrams.aws.database import ElasticacheForRedis
-from diagrams.onprem.database import Mongodb
+from diagrams.onprem.database import Cassandra
 from diagrams.onprem.analytics import Spark
 from diagrams.elastic.elasticsearch import Elasticsearch
 
-with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False):
+with Diagram("Cloud", direction="TB", show=False):
 
     # DNS and Load Balancer
     dns = Route53("DNS")
@@ -26,7 +26,7 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
     theatre_partner = User("Theatre Partner")
     notification = InAppMessaging("Notify")
     elastic_search = Elasticsearch("Elastic Cluster")
-    aggregator = Fluentd("aggreagtor")
+    aggregator = Logstash("aggreagtor")
 
     with Cluster("VPC"):
 
@@ -34,6 +34,7 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
         api_gateway = APIGateway("API Gateway (Auth, Rate Limiting, Caching, Logging, Tracing, Security, Context)")
         analytics_monitor = Spark("Analytics Processing")
         monitoring = Grafana("Analytics Monitoring")
+        analytics_database = Cassandra("Analytic db")
 
         # Microservices Cluster
         micro_cluster = Cluster("Microservices")
@@ -86,7 +87,7 @@ with Diagram("Online Movie Ticket Booking Platform", direction="TB", show=False)
     admin_service >> aggregator
     api_gateway >> aggregator >> elastic_search
 
-    analytics_consumer >> analytics_monitor >> monitoring
+    analytics_consumer >> analytics_monitor >> analytics_database >> monitoring
     relational_db >> analytics_monitor
     analytics_monitor >> relational_db
     search_service >> full_text_search

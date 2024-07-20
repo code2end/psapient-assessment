@@ -52,6 +52,12 @@ erDiagram
         int screen_id FK
         string seat_number
         string seat_type
+    }
+
+    Seat_Availability {
+        int id PK
+        int showtime_id FK
+        int seat_id FK
         string status
     }
 
@@ -76,6 +82,8 @@ erDiagram
         int user_id FK
         int showtime_id FK
         int seat_id FK
+        int screen_id FK
+        int theatre_id FK
         date booking_date
         decimal total_amount
         string status
@@ -116,6 +124,7 @@ erDiagram
     Screens }o--|| Theatres: in
     Theatres }o--|| Screens: has
     Screens }o--|| Seats: has
+    Seats }o--|| Seat_Availability: has
     Theatres ||--o{ Theatre_Partners: partnered_with
     Showtimes ||--o{ Bookings: booked_for
     Users ||--o{ Bookings: makes
