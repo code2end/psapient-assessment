@@ -1,0 +1,15 @@
+plugins {
+    id 'org.springframework.boot' apply false
+}
+
+subprojects {
+    apply plugin: 'org.springframework.boot'
+}
+
+build {
+    enabled = false
+}
+
+jar {
+    enabled = false
+}

@@ -1,0 +1,32 @@
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "org.springframework.boot") {
+                useVersion "${springBootPluginVersion}"
+            }
+
+            if (requested.id.id == "io.spring.dependency-management") {
+                useVersion "${springDependencyManagementPluginVersion}"
+            }
+        }
+    }
+}
+
+def includeProjects(String directory) {
+    //noinspection GrUnresolvedAccess
+    file("${rootDir}/" + directory).eachDir { dir ->
+        if (new File(dir, 'build.gradle').exists()) {
+            //noinspection GroovyAssignabilityCheck
+            include(directory + ":" + dir.name)
+        }
+    }
+}
+
+rootProject.name = 'backend'
+
+includeProjects("services")
