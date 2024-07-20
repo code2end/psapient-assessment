@@ -1,3 +1,10 @@
-diagrams/___pycache___
-diagrams/.venv
+#Data
 .DS*
+
+#Diagrams
+architecture/diagrams/___pycache___
+architecture/diagrams/.venv
+
+#Intellij files
+.idea
+*.iml
