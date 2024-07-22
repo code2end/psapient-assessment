@@ -22,5 +22,5 @@ python3 -m pip install diagrams
 - Global instal mermaid. Please check out to docs to setup locally.
   `npm install -g @mermaid-js/mermaid-cli`
 
-- Source the virtual env and activate it
+- Create the ouput from the input mermaid file
   `mmdc -i input.mmd -o output.png`
